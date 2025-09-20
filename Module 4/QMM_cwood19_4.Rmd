@@ -1,0 +1,76 @@
+---
+title: "QMM_cwood19_4"
+author: "Chris Wood"
+date: "2025-09-16"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+  word_document: default
+description: Module 4 Solving LP Model
+---
+```{r}
+# Initiate library to use
+library(lpSolveAPI)
+
+# Creating the model without an lp file
+# Initiate LP model with 0 constraints and 9 variables
+lpmodel <- make.lp(0, 9)
+
+# Name variables
+colnames(lpmodel) <- c("x11", "x12", "x13", "x21", "x22", "x23", "x31", "x32", "x33")
+
+# Objective (max)
+set.objfn(lpmodel, c(420, 360, 300, 420, 360, 300, 420, 360, 300))
+lp.control(lpmodel, sense = "max")
+
+# Capacity constraints
+add.constraint(lpmodel, c(1, 1, 1, 0, 0, 0, 0, 0, 0), "<=", 750)
+add.constraint(lpmodel, c(0, 0, 0, 1, 1, 1, 0, 0, 0), "<=", 900)
+add.constraint(lpmodel, c(0, 0, 0, 0, 0, 0, 1, 1, 1), "<=", 450)
+
+# Storage constraints
+add.constraint(lpmodel, c(20, 15, 12, 0, 0, 0, 0, 0, 0), "<=", 13000)
+add.constraint(lpmodel, c(0, 0, 0, 20, 15, 12, 0, 0, 0), "<=", 12000)
+add.constraint(lpmodel, c(0, 0, 0, 0, 0, 0, 20, 15, 12), "<=", 5000)
+
+# Demand constraints
+add.constraint(lpmodel, c(1, 0, 0, 1, 0, 0, 1, 0, 0), "<=", 900)
+add.constraint(lpmodel, c(0, 1, 0, 0, 1, 0, 0, 1, 0), "<=", 1200)
+add.constraint(lpmodel, c(0, 0, 1, 0, 0, 1, 0, 0, 1), "<=", 750)
+
+# Equal use constraints
+add.constraint(lpmodel, c(900, 900, 900, -750, -750, -750, 0, 0, 0), "=", 0)
+add.constraint(lpmodel, c(0, 0, 0, 450, 450, 450, -900, -900, -900), "=", 0)
+
+# Non-negativity bounds (default)
+set.bounds(lpmodel, lower = rep(0, 9))
+
+# Solve
+solve(lpmodel)
+
+# Results
+# Max objective value
+objective_value <- get.objective(lpmodel)
+cat(sprintf("Maximum Profit: $%.2f\n", objective_value))
+
+# Get decision variable values & names
+solution <- get.variables(lpmodel)
+var_names <- colnames(lpmodel)
+
+
+# Print results
+results <- data.frame(Variable = var_names, Value = solution)
+print(results)
+
+# Creating the model with an lp file
+x <- read.lp("QMM_cwood19_4.lp")
+print(x)
+solve(x)
+o_val <- get.objective(x)
+cat(sprintf("Maximum Profit: $%.2f\n", o_val))
+get.variables(x)
+get.constraints(x)
+lp_results <- data.frame(LP_Variable = colnames(x), LP_Value = get.variables(x))
+print(lp_results)
+```

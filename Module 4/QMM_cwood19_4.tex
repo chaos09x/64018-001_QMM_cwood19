@@ -1,0 +1,272 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={QMM\_cwood19\_4},
+  pdfauthor={Chris Wood},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{QMM\_cwood19\_4}
+\author{Chris Wood}
+\date{2025-09-16}
+
+\begin{document}
+\maketitle
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(lpSolveAPI)}
+
+\CommentTok{\# Create LP model with 0 constraints and 9 variables}
+\NormalTok{lpmodel }\OtherTok{\textless{}{-}} \FunctionTok{make.lp}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{9}\NormalTok{)}
+
+\CommentTok{\# Name variables}
+\FunctionTok{colnames}\NormalTok{(lpmodel) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"x11"}\NormalTok{, }\StringTok{"x12"}\NormalTok{, }\StringTok{"x13"}\NormalTok{, }\StringTok{"x21"}\NormalTok{, }\StringTok{"x22"}\NormalTok{, }\StringTok{"x23"}\NormalTok{, }\StringTok{"x31"}\NormalTok{, }\StringTok{"x32"}\NormalTok{, }\StringTok{"x33"}\NormalTok{)}
+
+\CommentTok{\# Objective (max)}
+\FunctionTok{set.objfn}\NormalTok{(lpmodel, }\FunctionTok{c}\NormalTok{(}\DecValTok{420}\NormalTok{, }\DecValTok{360}\NormalTok{, }\DecValTok{300}\NormalTok{, }\DecValTok{420}\NormalTok{, }\DecValTok{360}\NormalTok{, }\DecValTok{300}\NormalTok{, }\DecValTok{420}\NormalTok{, }\DecValTok{360}\NormalTok{, }\DecValTok{300}\NormalTok{))}
+\FunctionTok{lp.control}\NormalTok{(lpmodel, }\AttributeTok{sense =} \StringTok{"max"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $anti.degen
+## [1] "fixedvars" "stalling" 
+## 
+## $basis.crash
+## [1] "none"
+## 
+## $bb.depthlimit
+## [1] -50
+## 
+## $bb.floorfirst
+## [1] "automatic"
+## 
+## $bb.rule
+## [1] "pseudononint" "greedy"       "dynamic"      "rcostfixing" 
+## 
+## $break.at.first
+## [1] FALSE
+## 
+## $break.at.value
+## [1] 1e+30
+## 
+## $epsilon
+##       epsb       epsd      epsel     epsint epsperturb   epspivot 
+##      1e-10      1e-09      1e-12      1e-07      1e-05      2e-07 
+## 
+## $improve
+## [1] "dualfeas" "thetagap"
+## 
+## $infinite
+## [1] 1e+30
+## 
+## $maxpivot
+## [1] 250
+## 
+## $mip.gap
+## absolute relative 
+##    1e-11    1e-11 
+## 
+## $negrange
+## [1] -1e+06
+## 
+## $obj.in.basis
+## [1] TRUE
+## 
+## $pivoting
+## [1] "devex"    "adaptive"
+## 
+## $presolve
+## [1] "none"
+## 
+## $scalelimit
+## [1] 5
+## 
+## $scaling
+## [1] "geometric"   "equilibrate" "integers"   
+## 
+## $sense
+## [1] "maximize"
+## 
+## $simplextype
+## [1] "dual"   "primal"
+## 
+## $timeout
+## [1] 0
+## 
+## $verbose
+## [1] "neutral"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Capacity constraints}
+\FunctionTok{add.constraint}\NormalTok{(lpmodel, }\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{), }\StringTok{"\textless{}="}\NormalTok{, }\DecValTok{750}\NormalTok{)}
+\FunctionTok{add.constraint}\NormalTok{(lpmodel, }\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{), }\StringTok{"\textless{}="}\NormalTok{, }\DecValTok{900}\NormalTok{)}
+\FunctionTok{add.constraint}\NormalTok{(lpmodel, }\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{), }\StringTok{"\textless{}="}\NormalTok{, }\DecValTok{450}\NormalTok{)}
+
+\CommentTok{\# Storage constraints}
+\FunctionTok{add.constraint}\NormalTok{(lpmodel, }\FunctionTok{c}\NormalTok{(}\DecValTok{20}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{12}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{), }\StringTok{"\textless{}="}\NormalTok{, }\DecValTok{13000}\NormalTok{)}
+\FunctionTok{add.constraint}\NormalTok{(lpmodel, }\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{12}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{), }\StringTok{"\textless{}="}\NormalTok{, }\DecValTok{12000}\NormalTok{)}
+\FunctionTok{add.constraint}\NormalTok{(lpmodel, }\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{12}\NormalTok{), }\StringTok{"\textless{}="}\NormalTok{, }\DecValTok{5000}\NormalTok{)}
+
+\CommentTok{\# Demand constraints}
+\FunctionTok{add.constraint}\NormalTok{(lpmodel, }\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{), }\StringTok{"\textless{}="}\NormalTok{, }\DecValTok{900}\NormalTok{)}
+\FunctionTok{add.constraint}\NormalTok{(lpmodel, }\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{), }\StringTok{"\textless{}="}\NormalTok{, }\DecValTok{1200}\NormalTok{)}
+\FunctionTok{add.constraint}\NormalTok{(lpmodel, }\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{), }\StringTok{"\textless{}="}\NormalTok{, }\DecValTok{750}\NormalTok{)}
+
+\CommentTok{\# Equal use constraints}
+\FunctionTok{add.constraint}\NormalTok{(lpmodel, }\FunctionTok{c}\NormalTok{(}\DecValTok{900}\NormalTok{, }\DecValTok{900}\NormalTok{, }\DecValTok{900}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{750}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{750}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{750}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{), }\StringTok{"="}\NormalTok{, }\DecValTok{0}\NormalTok{)}
+\FunctionTok{add.constraint}\NormalTok{(lpmodel, }\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{450}\NormalTok{, }\DecValTok{450}\NormalTok{, }\DecValTok{450}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{900}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{900}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{900}\NormalTok{), }\StringTok{"="}\NormalTok{, }\DecValTok{0}\NormalTok{)}
+
+\CommentTok{\# Non{-}negativity bounds (default)}
+\FunctionTok{set.bounds}\NormalTok{(lpmodel, }\AttributeTok{lower =} \FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{9}\NormalTok{))}
+
+\CommentTok{\# Solve}
+\FunctionTok{solve}\NormalTok{(lpmodel)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Results}
+\CommentTok{\# Max objective value}
+\NormalTok{objective\_value }\OtherTok{\textless{}{-}} \FunctionTok{get.objective}\NormalTok{(lpmodel)}
+\FunctionTok{cat}\NormalTok{(}\FunctionTok{sprintf}\NormalTok{(}\StringTok{"Maximum Profit: $\%.2f}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{, objective\_value))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Maximum Profit: $696000.00
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Get decision variable values \& names}
+\NormalTok{solution }\OtherTok{\textless{}{-}} \FunctionTok{get.variables}\NormalTok{(lpmodel)}
+\NormalTok{var\_names }\OtherTok{\textless{}{-}} \FunctionTok{colnames}\NormalTok{(lpmodel)}
+
+
+\CommentTok{\# Print results nicely}
+\NormalTok{results }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{Variable =}\NormalTok{ var\_names, }\AttributeTok{Value =}\NormalTok{ solution)}
+\FunctionTok{print}\NormalTok{(results)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   Variable    Value
+## 1      x11 516.6667
+## 2      x12 177.7778
+## 3      x13   0.0000
+## 4      x21   0.0000
+## 5      x22 666.6667
+## 6      x23 166.6667
+## 7      x31   0.0000
+## 8      x32   0.0000
+## 9      x33 416.6667
+\end{verbatim}
+
+\end{document}
