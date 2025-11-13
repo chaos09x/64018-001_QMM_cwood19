@@ -1,0 +1,318 @@
+---
+title: "QMM_cwood19_8"
+author: "Chris Wood"
+date: "2025-10-24"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+  word_document: default
+description: Module 8 Assignment
+---
+Summary:
+Analysis reveals that in general, Facility 5 and 6 are sub-optimal in comparison to 1-4.
+F5/6 should look at F1/2/4 in CRS
+F6 should look at F1/2/5 in IRS
+F5/6 should look at F1/2/4 in DRS
+F6 should look at F1/2/5 in VRS
+FDH and FRH yield no significant results for change.
+```{r}
+# Initiate libraries
+library(lpSolveAPI)
+library(Benchmarking)
+library(knitr)
+library(kableExtra)
+# Display data
+data_dea <- data.frame(
+  DMU = c("Facility 1", "Facility 2", "Facility 3", "Facility 4", "Facility 5", "Facility 6"),
+  Staff_hours = c(150.0, 400.0, 320.0, 520.0, 350.0, 320.0),
+  Supplies = c(0.200, 0.700, 1.200, 2.000, 1.200, 0.700),
+  Reimbursed_patient = c(14000, 14000, 42000, 28000, 19000, 14000),
+  Privately_paid = c(3500, 21000, 10500, 42000, 25000, 15000)
+)
+
+caption <- "Hope Valley Health Care Association"
+styled_table <- kable(data_dea, format = "html", caption = caption) %>%
+  kable_styling(bootstrap_options = "bordered", full_width = TRUE) %>%
+  row_spec(1, extra_css = "border-bottom: 1px dotted;")
+styled_table
+
+# Create input and output matrices based on the given data
+
+x <- matrix(c(150.0, 400.0, 320.0, 520.0, 350.0, 320.0,
+              0.200, 0.700, 1.200, 2.000, 1.200, 0.700), ncol = 2)
+
+y <- matrix(c(14000, 14000, 42000, 28000, 19000, 14000,
+              3500, 21000, 10500, 42000, 25000, 15000), ncol = 2)
+
+colnames(y) <- c("Reimbursed Patient-Days", "Privately Paid Patient-Days")
+colnames(x) <- c("Staff hours", "Clinical supplies")
+
+cat("INPUT DATA:\n")
+print(x)
+cat("\n\nOUTPUT DATA:\n")
+print(y)
+
+# Question 1: DEA Analysis Under All Assumptions
+## 1. CONSTANT RETURNS TO SCALE (CRS)
+# Calculate efficiency scores
+efficiency_crs <- dea(x, y, RTS = "crs")
+cat("CRS Efficiency Scores:\n")
+efficiency_crs
+
+# Calculate peers
+cat("\n\nCRS Peers:\n")
+peers(efficiency_crs)
+
+# Calculate lambda values
+cat("\n\nCRS Lambda Values:\n")
+lambda_crs <- round(lambda(efficiency_crs), 2)
+lambda_crs
+
+# CRS Plot using the image data
+x_plot <- matrix(c(187.5, 500.0, 400.0, 650.0, 437.5, 400.0,
+                   0.250, 0.875, 1.500, 2.500, 1.500, 0.875), ncol = 2,
+                 dimnames = list(c("A", "B", "C", "D", "E", "F"), 
+                                c("Staff_Hours", "Clinical_Supplies")))
+y_plot <- matrix(c(17500, 17500, 52500, 35000, 23750, 17500,
+                   4375, 26250, 13125, 52500, 31250, 18750), ncol = 2,
+                 dimnames = list(c("A", "B", "C", "D", "E", "F"), 
+                                c("Reimbursed_Patient_Days", "Privately_Paid_Days")))
+dea.plot(x_plot, y_plot, RTS = "crs", ORIENTATION = "in-out", txt = rownames(x_plot))
+
+# Calculate efficiency scores
+efficiency_irs <- dea(x, y, RTS = "irs")
+cat("IRS Efficiency Scores:\n")
+efficiency_irs
+# Calculate peers
+cat("\n\nIRS Peers:\n")
+peers(efficiency_irs)
+# Calculate lambda values
+cat("\n\nIRS Lambda Values:\n")
+lambda_irs <- round(lambda(efficiency_irs), 2)
+lambda_irs
+dea.plot(x_plot, y_plot, RTS = "irs", ORIENTATION = "in-out", txt = rownames(x_plot))
+
+# Calculate efficiency scores
+efficiency_drs <- dea(x, y, RTS = "drs")
+cat("DRS Efficiency Scores:\n")
+efficiency_drs
+# Calculate peers
+cat("\n\nDRS Peers:\n")
+peers(efficiency_drs)
+# Calculate lambda values
+cat("\n\nDRS Lambda Values:\n")
+lambda_drs <- round(lambda(efficiency_drs), 2)
+lambda_drs
+dea.plot(x_plot, y_plot, RTS = "drs", ORIENTATION = "in-out", txt = rownames(x_plot))
+
+# Calculate efficiency scores
+efficiency_vrs <- dea(x, y, RTS = "vrs")
+cat("VRS Efficiency Scores:\n")
+efficiency_vrs
+# Calculate peers
+cat("\n\nVRS Peers:\n")
+peers(efficiency_vrs)
+# Calculate lambda values
+cat("\n\nVRS Lambda Values:\n")
+lambda_vrs <- round(lambda(efficiency_vrs), 2)
+lambda_vrs
+dea.plot(x_plot, y_plot, RTS = "vrs", ORIENTATION = "in-out", txt = rownames(x_plot))
+
+# Calculate efficiency scores
+efficiency_fdh <- dea(x, y, RTS = "fdh")
+cat("FDH Efficiency Scores:\n")
+efficiency_fdh
+# Calculate peers
+cat("\n\nFDH Peers:\n")
+peers(efficiency_fdh)
+# Calculate lambda values
+cat("\n\nFDH Lambda Values:\n")
+lambda_fdh <- round(lambda(efficiency_fdh), 2)
+lambda_fdh
+dea.plot(x_plot, y_plot, RTS = "fdh", ORIENTATION = "in-out", txt = rownames(x_plot))
+
+# Calculate efficiency scores
+efficiency_frh <- dea(x, y, RTS = "add")
+cat("FRH Efficiency Scores:\n")
+efficiency_frh
+# Calculate peers
+cat("\n\nFRH Peers:\n")
+peers(efficiency_frh)
+# Calculate lambda values
+cat("\n\nFDH Lambda Values:\n")
+lambda_frh <- round(lambda(efficiency_frh), 2)
+lambda_frh
+dea.plot(x_plot, y_plot, RTS = "fdh", ORIENTATION = "in-out", txt = rownames(x_plot), col = "blue")
+dea.plot(x_plot, y_plot, RTS = "add", ORIENTATION = "in-out", add = TRUE, lty = "dashed", lwd = 2, col = "red")
+legend("topleft", legend = c("FDH", "FRH"), col = c("blue", "red"), lty = c(1, 2), lwd = 2)
+
+# Question 2: Determine the Peers and Lambdas under each of the above assumptions
+# Recalculate all models to ensure they exist
+efficiency_crs <- dea(x, y, RTS = "crs")
+efficiency_irs <- dea(x, y, RTS = "irs")
+efficiency_drs <- dea(x, y, RTS = "drs")
+efficiency_vrs <- dea(x, y, RTS = "vrs")
+efficiency_fdh <- dea(x, y, RTS = "fdh")
+efficiency_frh <- dea(x, y, RTS = "add")
+
+# Extract lambda values
+lambda_crs <- lambda(efficiency_crs)
+# Get peers
+peers_crs <- peers(efficiency_crs)
+# Create summary table
+crs_summary <- data.frame(
+  DMU = c("Facility 1", "Facility 2", "Facility 3", "Facility 4", "Facility 5", "Facility 6"),
+  Efficiency = round(efficiency_crs$eff, 4),
+  Peer_1 = c(1, 2, peers_crs[3,1], 4, peers_crs[5,1], peers_crs[6,1]),
+  Peer_2 = c(NA, NA, ifelse(length(peers_crs[3,]) > 1, peers_crs[3,2], NA), 
+             NA, ifelse(length(peers_crs[5,]) > 1, peers_crs[5,2], NA), 
+             ifelse(length(peers_crs[6,]) > 1, peers_crs[6,2], NA))
+)
+kable(crs_summary, caption = "CRS: Efficiency and Peers", escape = FALSE, booktabs = TRUE) %>%
+  kable_styling(bootstrap_options = "bordered", full_width = TRUE)
+# Lambda values
+cat("\n\nCRS Lambda Matrix:\n")
+print(round(lambda_crs, 3))
+
+lambda_irs <- lambda(efficiency_irs)
+peers_irs <- peers(efficiency_irs)
+irs_summary <- data.frame(
+  DMU = c("Facility 1", "Facility 2", "Facility 3", "Facility 4", "Facility 5", "Facility 6"),
+  Efficiency = round(efficiency_irs$eff, 4),
+  Peer_1 = c(1, 2, peers_irs[3,1], 4, peers_irs[5,1], peers_irs[6,1]),
+  Peer_2 = c(NA, NA, ifelse(length(peers_irs[3,]) > 1, peers_irs[3,2], NA), 
+             NA, ifelse(length(peers_irs[5,]) > 1, peers_irs[5,2], NA), 
+             ifelse(length(peers_irs[6,]) > 1, peers_irs[6,2], NA))
+)
+kable(irs_summary, caption = "IRS: Efficiency and Peers") %>%
+  kable_styling(bootstrap_options = "bordered", full_width = TRUE)
+cat("\n\nIRS Lambda Matrix:\n")
+print(round(lambda_irs, 3))
+
+lambda_drs <- lambda(efficiency_drs)
+peers_drs <- peers(efficiency_drs)
+drs_summary <- data.frame(
+  DMU = c("Facility 1", "Facility 2", "Facility 3", "Facility 4", "Facility 5", "Facility 6"),
+  Efficiency = round(efficiency_drs$eff, 4),
+  Peer_1 = c(1, 2, peers_drs[3,1], 4, peers_drs[5,1], peers_drs[6,1]),
+  Peer_2 = c(NA, NA, ifelse(length(peers_drs[3,]) > 1, peers_drs[3,2], NA), 
+             NA, ifelse(length(peers_drs[5,]) > 1, peers_drs[5,2], NA), 
+             ifelse(length(peers_drs[6,]) > 1, peers_drs[6,2], NA))
+)
+kable(drs_summary, caption = "DRS: Efficiency and Peers", escape = FALSE, booktabs = TRUE) %>%
+  kable_styling(bootstrap_options = "bordered", full_width = TRUE)
+cat("\n\nDRS Lambda Matrix:\n")
+print(round(lambda_drs, 3))
+
+lambda_vrs <- lambda(efficiency_vrs)
+peers_vrs <- peers(efficiency_vrs)
+vrs_summary <- data.frame(
+  DMU = c("Facility 1", "Facility 2", "Facility 3", "Facility 4", "Facility 5", "Facility 6"),
+  Efficiency = round(efficiency_vrs$eff, 4)
+)
+kable(vrs_summary, caption = "VRS: Efficiency and Peers", escape = FALSE, booktabs = TRUE) %>%
+  kable_styling(bootstrap_options = "bordered", full_width = TRUE)
+cat("\n\nVRS Peers:\n")
+print(peers_vrs)
+cat("\n\nVRS Lambda Matrix:\n")
+print(round(lambda_vrs, 3))
+
+lambda_fdh <- lambda(efficiency_fdh)
+peers_fdh <- peers(efficiency_fdh)
+fdh_summary <- data.frame(
+  DMU = c("Facility 1", "Facility 2", "Facility 3", "Facility 4", "Facility 5", "Facility 6"),
+  Efficiency = round(efficiency_fdh$eff, 4),
+  Peer = c(1, 2, 3, 4, 5, 6)
+)
+kable(fdh_summary, caption = "FDH: Efficiency and Peers", escape = FALSE, booktabs = TRUE) %>%
+  kable_styling(bootstrap_options = "bordered", full_width = TRUE)
+cat("\n\nFDH Peers:\n")
+print(peers_fdh)
+cat("\n\nFDH Lambda Matrix:\n")
+print(round(lambda_fdh, 3))
+
+lambda_frh <- lambda(efficiency_frh)
+peers_frh <- peers(efficiency_frh)
+frh_summary <- data.frame(
+  DMU = c("Facility 1", "Facility 2", "Facility 3", "Facility 4", "Facility 5", "Facility 6"),
+  Efficiency = round(efficiency_frh$eff, 4)
+)
+kable(frh_summary, caption = "FRH: Efficiency and Peers", escape = FALSE, booktabs = TRUE) %>%
+  kable_styling(bootstrap_options = "bordered", full_width = TRUE)
+cat("\n\nFRH Peers:\n")
+print(peers_frh)
+cat("\n\nFRH Lambda Matrix:\n")
+print(round(lambda_frh, 3))
+
+# Question 3: Summarize your results in a tabular format
+# Create comprehensive summary table
+summary_data <- data.frame(
+  DMU = c("Facility 1", "Facility 2", "Facility 3", "Facility 4", "Facility 5", "Facility 6"),
+  CRS = round(efficiency_crs$eff, 4),
+  IRS = round(efficiency_irs$eff, 4),
+  DRS = round(efficiency_drs$eff, 4),
+  VRS = round(efficiency_vrs$eff, 4),
+  FDH = round(efficiency_fdh$eff, 4),
+  FRH = round(efficiency_frh$eff, 4)
+)
+kable(summary_data, 
+      caption = "Summary of Efficiency Scores Across All DEA Models - Riverbend Community Care Network",
+      col.names = c("DMU", "CRS", "IRS", "DRS", "VRS", "FDH", "FRH"),
+      booktabs = TRUE) %>%
+  kable_styling(bootstrap_options = c("striped", "bordered", "hover"), 
+                full_width = TRUE) %>%
+  row_spec(0, bold = TRUE, background = "#D3D3D3") %>%
+  column_spec(1, bold = TRUE)
+
+# Function to get peer string
+get_peer_string <- function(peers_obj, index) {
+  peer_vec <- peers_obj[index, ]
+  peer_vec <- peer_vec[!is.na(peer_vec) & peer_vec != 0]
+  if (length(peer_vec) == 0 || (length(peer_vec) == 1 && peer_vec[1] == index)) {
+    return("Self")
+  }
+  return(paste(peer_vec, collapse = ", "))
+}
+# Peer summary table
+peer_summary <- data.frame(
+  DMU = c("Facility 1", "Facility 2", "Facility 3", "Facility 4", "Facility 5", "Facility 6"),
+  CRS_Peers = sapply(1:6, function(i) get_peer_string(peers(efficiency_crs), i)),
+  IRS_Peers = sapply(1:6, function(i) get_peer_string(peers(efficiency_irs), i)),
+  DRS_Peers = sapply(1:6, function(i) get_peer_string(peers(efficiency_drs), i)),
+  VRS_Peers = sapply(1:6, function(i) get_peer_string(peers(efficiency_vrs), i)),
+  FDH_Peers = c("Self", "Self", "Self", "Self", "Self", "Self"),
+  FRH_Peers = sapply(1:6, function(i) get_peer_string(peers(efficiency_frh), i))
+)
+kable(peer_summary,
+      caption = "Summary of Peer Units Across All DEA Models",
+      booktabs = TRUE) %>%
+  kable_styling(bootstrap_options = c("striped", "bordered", "hover"),
+                full_width = TRUE) %>%
+  row_spec(0, bold = TRUE, background = "#D3D3D3") %>%
+  column_spec(1, bold = TRUE)
+
+# Question 4: Compare and contrast the above results
+cat("\n=== EFFICIENCY ANALYSIS FOR Hope Valley Health Care Association ===\n\n")
+cat("Efficient Facilities by Model:\n")
+cat("CRS: Facilities", which(efficiency_crs$eff == 1), "\n")
+cat("IRS: Facilities", which(efficiency_irs$eff == 1), "\n")
+cat("DRS: Facilities", which(efficiency_drs$eff == 1), "\n")
+cat("VRS: Facilities", which(efficiency_vrs$eff == 1), "\n")
+cat("FDH: Facilities", which(efficiency_fdh$eff == 1), "\n")
+cat("FRH: Facilities", which(efficiency_frh$eff == 1), "\n\n")
+cat("Average Efficiency by Model:\n")
+cat("CRS:", round(mean(efficiency_crs$eff), 4), "\n")
+cat("IRS:", round(mean(efficiency_irs$eff), 4), "\n")
+cat("DRS:", round(mean(efficiency_drs$eff), 4), "\n")
+cat("VRS:", round(mean(efficiency_vrs$eff), 4), "\n")
+cat("FDH:", round(mean(efficiency_fdh$eff), 4), "\n")
+cat("FRH:", round(mean(efficiency_frh$eff), 4), "\n\n")
+cat("Efficiency Score Ranges:\n")
+cat("CRS: [", round(min(efficiency_crs$eff), 4), ",", round(max(efficiency_crs$eff), 4), "]\n")
+cat("IRS: [", round(min(efficiency_irs$eff), 4), ",", round(max(efficiency_irs$eff), 4), "]\n")
+cat("DRS: [", round(min(efficiency_drs$eff), 4), ",", round(max(efficiency_drs$eff), 4), "]\n")
+cat("VRS: [", round(min(efficiency_vrs$eff), 4), ",", round(max(efficiency_vrs$eff), 4), "]\n")
+cat("FDH: [", round(min(efficiency_fdh$eff), 4), ",", round(max(efficiency_fdh$eff), 4), "]\n")
+cat("FRH: [", round(min(efficiency_frh$eff), 4), ",", round(max(efficiency_frh$eff), 4), "]\n")
+```

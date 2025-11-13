@@ -1,0 +1,17 @@
+---
+title: "Module 11"
+author: "Chris Wood"
+date: "2025-11-13"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+  word_document: default
+description: Module 11 Assignment
+---
+
+```{r}
+library(lpSolveAPI)
+df_requirements = data.frame(WorkDays = c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"), NumWorkers = c(18, 27, 22, 26, 25, 21, 19))
+df_available = data.frame(Shift = c(1, 2, 3, 4, 5, 6, 7), DaysOff = c("Sunday and Monday", "Monday and Tuesday", "Tuesday and Wednesday", "Wednesday and Thursday", "Thursday and Friday", "Friday and Saturday", "Saturday and Sunday"), Wage = c("$775", "$800", "$800", "$800", "$800", "$775", "$750"))
+```

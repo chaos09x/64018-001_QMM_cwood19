@@ -1,0 +1,49 @@
+---
+title: "QMM_cwood19_9"
+author: "Chris Wood"
+date: "2025-11-01"
+output: html_document
+---
+QMM Module 9 Goal Programming
+Z shows a maximized 225M net profits with 375M gross profits, exceeding minimum goal. Next year's goal will meet expectations at 75M. Employment losses will be over expectation by 2500 at 7500. 
+```{r}
+# Total Profit: P = 20x1 + 15x2 + 25x3
+# Employment Level: 6x1 + 4x2 + 5x3 + y1n - y1p = 50
+# Earnings goal: 8x1 + 7x2 + 5x3 + y2n - y2p = 75
+# Z = P - 6C - 3D
+# P = 20x1 + 15x2 + 25x3
+# C = y1p + y1n 
+# D = y2n
+# Z = (20x1 + 15x2 + 25x3) - 6(y1p + y1n) - 3(y2n)
+library(lpSolve)
+objective <- c(20, 15, 25, -6, -6, 0, -3)
+# Constraints:
+# Employment: 6x1 + 4x2 + 5x3 + y1- - y1+ = 50
+# Earnings: 8x1 + 7x2 + 5x3 + y2- - y2+ = 75
+const.mat <- matrix(c(
+  6, 4, 5, -1, 1, 0, 0, 
+  8, 7, 5, 0, 0, -1, 1  
+), nrow = 2, byrow = TRUE)
+const.dir <- c("=", "=")
+const.rhs <- c(50, 75)
+solution <- lp("max", objective, const.mat, const.dir, const.rhs, all.int = FALSE)
+solution$solution
+solution$objval
+cat("Status:", solution$status, "(0 = optimal)\n\n")
+vars <- solution$solution
+names(vars) <- c("x1", "x2", "x3", "y1p", "y1n", "y2p", "y2n")
+print(round(vars, 4))
+cat("\nObjective Function Value (Z) =", round(solution$objval, 4), "\n")
+# P = 20(0) + 15(0) + 25(15) = 375 (million)
+# Employment: 6(0) + 4(0) + 5(15) + 0 - 25 = 50 (hundred) 
+# Earnings: 8(0) + 7(0) + 5(15) + 0 - 0 = 75 (million)
+# All goals have been achieved
+# Z = 20(0) + 15(0) + 25(15) - 6(25) + 6(0) - 3(0) = 225 (million)
+x1 <- vars["x1"]; x2 <- vars["x2"]; x3 <- vars["x3"]
+employment <- 6*x1 + 4*x2 + 5*x3
+earnings <- 8*x1 + 7*x2 + 5*x3
+profit <- 20*x1 + 15*x2 + 25*x3
+cat("\nTotal Profit (P) =", round(profit, 2),
+    "\nEmployment =", round(employment, 2),
+    "\nEarnings Next Year =", round(earnings, 2), "\n")
+```
