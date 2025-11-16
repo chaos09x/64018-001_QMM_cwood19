@@ -12,6 +12,65 @@ description: Module 11 Assignment
 
 ```{r}
 library(lpSolveAPI)
-df_requirements = data.frame(WorkDays = c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"), NumWorkers = c(18, 27, 22, 26, 25, 21, 19))
-df_available = data.frame(Shift = c(1, 2, 3, 4, 5, 6, 7), DaysOff = c("Sunday and Monday", "Monday and Tuesday", "Tuesday and Wednesday", "Wednesday and Thursday", "Thursday and Friday", "Friday and Saturday", "Saturday and Sunday"), Wage = c("$775", "$800", "$800", "$800", "$800", "$775", "$750"))
+library(lpSolve)
+#df_requirements = data.frame(WorkDays = c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"), NumWorkers = c(18, 27, 22, 26, 25, 21, 19))
+#df_available = data.frame(Shift = c(1, 2, 3, 4, 5, 6, 7), DaysOff = c("Sunday and Monday", "Monday and Tuesday", "Tuesday and Wednesday", "Wednesday and Thursday", "Thursday and Friday", "Friday and Saturday", "Saturday and Sunday"), Wage = c("$775", "$800", "$800", "$800", "$800", "$775", "$750"))
+# Day Req
+req <- c(Sun=18, Mon=27, Tue=22, Wed=26, Thu=25, Fri=21, Sat=19)
+# Shift Wage
+wage <- c(775, 800, 800, 800, 800, 775, 750)
+# Decision Variables
+# x8 = workers assigned to a shift (s = 1..7)
+# constraints = 
+# x2+x3+x4+x5+x6 >= 18
+# x3+x4+x5+x6+x7 >= 27
+# x1+x4+x5+x6+x7 >= 22
+# x1+x2+x5+x6+x7 >= 26
+# x1+x2+x3+x6+x7 >= 25
+# x1+x2+x3+x4+x7 >= 21
+# x1+x2+x3+x4+x5 >= 19
+work_matrix <- matrix(c(0,1,1,1,1,1,0,
+                        0,0,1,1,1,1,1,
+                        1,0,0,1,1,1,1,
+                        1,1,0,0,1,1,1,
+                        1,1,1,0,0,1,1,
+                        1,1,1,1,0,0,1,
+                        1,1,1,1,1,0,0
+                        ), nrow = 7, byrow = TRUE)
+# Objective Function
+# min cost=775x1+800x2+800x3+800x4+800x5+775x6+750x7
+# Solution
+solution <- lp(direction="min",
+               objective.in=wage,
+               const.mat=work_matrix,
+               const.dir=rep(">=",7),
+               const.rhs=req,
+               all.int=TRUE)
+# Optimal = 0
+solution$status
+# Cost TTL
+total_cost <- solution$objval
+# Wrkr/Shft
+shift_workers <- solution$solution
+# Wrkr/Day
+available <- as.vector(work_matrix %*% shift_workers)
+names(available) <- names(req)
+shift_table <- data.frame(
+  Shift = 1:7,
+  Workers_Assigned = shift_workers,
+  Wage = wage
+)
+day_table <- data.frame(
+  #Day = names(req),
+  Required = req,
+  Available = available
+)
+print("Total weekly cost:")
+print(total_cost)
+
+print("Workers assigned to each shift:")
+print(shift_table)
+
+print("Daily required vs. available workers:")
+print(day_table)
 ```
